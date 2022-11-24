@@ -24,13 +24,14 @@ class Person(object):
         # Set their properties to show this
         # TODO: The method Should return a Boolean showing if they survived.
         if self.infection is not None:
-            print("you are infected")
             infect_num = random.uniform(0.0, 1.0)
             if infect_num < self.infection.mortality_rate:
                 self.is_alive = False
                 return self.is_alive
+            else:
+                self.is_vaccinated = True
+                return self.is_alive
         else:
-            print("you are not infected")
             return self.is_alive
 
 
@@ -54,11 +55,11 @@ if __name__ == "__main__":
     # Create a Virus object to give a Person object an infection
     virus = Virus("Dysentery", 0.7, 0.2)
     # Create a Person object and give them the virus infection
-    infected_person = Person(3, False, virus)
+    infected_person = Person(3, False, infection=virus)
     # TODO: complete your own assert statements that test
     # the values of each attribute
     assert infected_person._id == 3
-    # assert infected_person.is_alive is True
+    assert infected_person.is_alive is True
     assert infected_person.is_vaccinated is False
     assert infected_person.infection is virus
 
@@ -66,22 +67,27 @@ if __name__ == "__main__":
     # of survival is random you need to check a group of people. 
     # Create a list to hold 100 people. Use the loop below to make 100 people
     people = []
-    for i in range(1, 100):
+    for i in range(1, 101):
         # TODO Make a person with an infection
         # TODO Append the person to the people list
-        pass
+        people.append(Person(i, False, infection=virus))
 
     # Now that you have a list of 100 people. Resolve whether the Person 
     # survives the infection or not by looping over the people list. 
+    did_survived = 0
+    did_not_survive = 0
 
-    # for person in people:
-    #     # For each person call that person's did_survive_infection method
-    #     survived = person.did_survive_infection()
+    for person in people:
+        # For each person call that person's did_survive_infection method
+        survived = person.did_survive_infection()
+        if person.is_alive:
+            did_survived += 1
+        else:
+            did_not_survive += 1
 
     # Count the people that survived and did not survive: 
-   
-    # did_survived = 0
-    # did_not_survive = 0
+    print(did_survived)
+    print(did_not_survive)
 
     # TODO Loop over all of the people 
     # TODO If a person is_alive True add one to did_survive
@@ -98,6 +104,31 @@ if __name__ == "__main__":
     # Generate a random number. If that number is less than the 
     # infection rate of the virus that person is now infected. 
     # Assign the virus to that person's infection attribute. 
+    virus2 = Virus("Bad news", 0.4, 0.5)
+    people2 = []
+    did_survived2 = 0
+    did_not_survive2 = 0
+    infected = 0
+
+    for i in range(1, 101):
+        infection_num = random.uniform(0.0, 1.0)
+        if infection_num < virus2.repro_rate:
+            people2.append(Person(i, False, infection=virus2))
+        else:
+            people2.append(Person(i, False))
+        
+    for person in people2:
+        person.did_survive_infection()
+        if person.is_alive:
+            did_survived2 += 1
+        else:
+            did_not_survive2 += 1
+        if person.infection is not None:
+            infected += 1
+
+    print(did_survived2)
+    print(did_not_survive2)
+    print(f"Infected: {infected}")
 
     # Now count the infected and uninfect people from this group of people. 
     # The number of infectedf people should be roughly the same as the 
