@@ -5,12 +5,13 @@ from virus import Virus
 
 class Person(object):
     # Define a person. 
-    def __init__(self, _id, is_vaccinated, is_alive = True, infection = None):
+    def __init__(self, _id, is_vaccinated, infection = None, infection_date=None):
         # A person has an id, is_vaccinated and possibly an infection
         self._id = _id  # int
         self.is_vaccinated = is_vaccinated
-        self.is_alive = is_alive
+        self.is_alive = True
         self.infection = infection
+        self.infection_date = infection_date
         # TODO Define the other attributes of a person here
 
 
@@ -23,13 +24,15 @@ class Person(object):
         # Otherwise they have survived infection and they are now vaccinated. 
         # Set their properties to show this
         # TODO: The method Should return a Boolean showing if they survived.
-        if self.infection is not None:
-            infect_num = random.uniform(0.0, 1.0)
+        if self.infection is not None and self.is_alive:
+            infect_num = round(random.uniform(0.0, 1.0), 2)
             if infect_num < self.infection.mortality_rate:
+                # print(infect_num)
                 self.is_alive = False
                 return self.is_alive
             else:
                 self.is_vaccinated = True
+                # self.infection = None
                 return self.is_alive
         else:
             return self.is_alive
@@ -111,7 +114,7 @@ if __name__ == "__main__":
     infected = 0
 
     for i in range(1, 101):
-        infection_num = random.uniform(0.0, 1.0)
+        infection_num = round(random.uniform(0.0, 1.0), 2)
         if infection_num < virus2.repro_rate:
             people2.append(Person(i, False, infection=virus2))
         else:

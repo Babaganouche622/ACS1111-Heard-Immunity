@@ -29,19 +29,49 @@ class Logger(object):
         # the 'a' mode to append a new log to the end, since 'w' overwrites the file.
         # NOTE: Make sure to end every line with a '/n' character to ensure that each
         # event logged ends up on a separate line!
-        pass
+        outfile = open(self.file_name, "w")
+        new_pop_size = f"The population size was: {pop_size}.\n"
+        new_vacc_percentage = f"The vaccinated percentage was: {vacc_percentage}.\n"
+        new_virus_name = f"The virus used for testing was: {virus_name.name}.\n"
+        new_mortality_rate = f"The mortality rate was: {mortality_rate}.\n"
+        new_basic_repro_num = f"The reproductive rate of this virus was: {basic_repro_num}.\n\n"
+
+        outfile.write((new_pop_size + new_vacc_percentage + new_virus_name + new_mortality_rate + new_basic_repro_num))
+        outfile.close()
+
 
     def log_interactions(self, step_number, number_of_interactions, number_of_new_infections):
         # TODO: Finish this method. Think about how the booleans passed (or not passed)
         # represent all the possible edge cases. Use the values passed along with each person,
         # along with whether they are sick or vaccinated when they interact to determine
         # exactly what happened in the interaction and create a String, and write to your logfile.
-        pass
+        outfile = open(self.file_name, "a")
+        total_new_infected = 0
+        total_interactions = 0
+        for person in number_of_new_infections:
+            if person.infection != None:
+                total_new_infected += 1
+
+        for person in number_of_interactions:
+            total_interactions += 1
+        
+        to_file = f"On step {step_number} we had a total of {total_interactions} interactions, and a total of {total_new_infected} infections.\n"
+        outfile.write(to_file)
+        outfile.close()
+
 
     def log_infection_survival(self, step_number, population_count, number_of_new_fatalities):
         # TODO: Finish this method. If the person survives, did_die_from_infection
         # should be False.  Otherwise, did_die_from_infection should be True.
         # Append the results of the infection to the logfile
+        outfile = open(self.file_name, "a")
+        number_dead = 0
+        for person in number_of_new_fatalities:
+            if not person.is_alive:
+                number_dead += 1
+        to_file = f"On step {step_number} we have a total of {number_dead} people dead of a total population of {population_count}.\n"
+        outfile.write(to_file)
+        outfile.close()
         pass
 
     def log_time_step(self, time_step_number):
