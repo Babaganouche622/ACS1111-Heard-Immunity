@@ -15,13 +15,13 @@ class Person(object):
             infect_num = round(random.uniform(0.0, 1.0), 2)
             if infect_num < self.infection.mortality_rate:
                 self.is_alive = False
-                # print("Are we doing anything?")
+                self.infection = None
             else:
                 self.is_vaccinated = True
                 self.infection = None
-            #     return self.is_alive
 
-            return self.is_alive
+        return self.is_alive
+
 
 
 
@@ -48,28 +48,25 @@ if __name__ == "__main__":
     assert infected_person.is_vaccinated is False
     assert infected_person.infection is virus
 
+    
     people = []
     for i in range(1, 101):
         people.append(Person(i, False, infection=virus))
 
-    did_survived = 0
-    did_not_survive = 0
-
     for person in people:
-        survived = person.did_survive_infection()
-        if person.is_alive:
-            did_survived += 1
+        if person.did_survive_infection():
+            assert person.is_alive
+            assert person.is_vaccinated
+            assert not person.infection
         else:
-            did_not_survive += 1
+            assert not person.is_alive
+            assert not person.is_vaccinated
+            assert not person.infection
 
-    print(did_survived)
-    print(did_not_survive)
 
+    """Testing for infected and not infected people passing did_survive_infection() correctly"""    
     virus2 = Virus("Bad news", 0.4, 0.12)
     people2 = []
-    did_survived2 = 0
-    did_not_survive2 = 0
-    infected = 0
 
     for i in range(1, 101):
         infection_num = round(random.uniform(0.0, 1.0), 2)
@@ -79,14 +76,16 @@ if __name__ == "__main__":
             people2.append(Person(i, False))
         
     for person in people2:
+            if person.did_survive_infection and person.infection is None:
+                assert person.is_alive
+                assert not person.is_vaccinated
+                assert not person.infection  
+            elif person.did_survive_infection() and person.infection:
+                assert person.is_alive
+                assert person.is_vaccinated
+                assert not person.infection
+            elif not person.did_survive_infection():
+                assert not person.is_alive
+                assert not person.is_vaccinated
+                assert not person.infection
         
-        if person.did_survive_infection():
-            did_survived2 += 1
-        else:
-            did_not_survive2 += 1
-        # if person.infection is not None:
-        #     infected += 1
-    print(len(people2))
-    print(did_survived2)
-    print(did_not_survive2)
-    print(f"Infected: {infected}")
